@@ -1,8 +1,6 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 
-# SimpleCov.command_name 'test:server'
-
 describe OrientdbBinary::Server do
   before do
     @server = OrientdbBinary::Server.new(TestHelper::SERVER)
@@ -27,7 +25,7 @@ describe OrientdbBinary::Server do
     end
   end
 
-  describe "config" do
+  describe "configuration" do
     it "should list configuration options" do
       assert @server.config_list[:config_list].length > 0
     end
@@ -35,6 +33,37 @@ describe OrientdbBinary::Server do
     it "should get configuration option" do
       option = @server.config_list[:config_list].last
       assert_equal @server.get_config(option[:option_key])[:option_value], option[:option_value]
+    end
+
+    it "should set configuration option" do
+      option = @server.config_list[:config_list].last
+      new_value = "15001"
+      @server.set_config(option[:option_key], new_value)
+      assert_equal @server.get_config(option[:option_key])[:option_value], new_value
+      # set it back
+      @server.set_config(option[:option_key], option[:option_value])
+      assert_equal @server.get_config(option[:option_key])[:option_value], option[:option_value]
+    end
+  end
+
+  describe "database" do
+    before do
+      if @server.db_exists? TestHelper::TEST_DB[:name]
+        @server.db_drop TestHelper::TEST_DB[:name], TestHelper::TEST_DB[:storage]
+      end
+      assert(!@server.db_exists?(TestHelper::TEST_DB[:name]))
+    end
+
+    after do
+      if @server.db_exists? TestHelper::TEST_DB[:name]
+        @server.db_drop TestHelper::TEST_DB[:name], TestHelper::TEST_DB[:storage]
+      end
+      assert(!@server.db_exists?(TestHelper::TEST_DB[:name]))
+    end
+      
+    it "should create database" do
+      @server.db_create(TestHelper::TEST_DB[:name], 'document', TestHelper::TEST_DB[:storage])
+      assert @server.db_exists? TestHelper::TEST_DB[:name]
     end
   end
 end

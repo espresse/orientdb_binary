@@ -25,7 +25,7 @@ module OrientdbBinary
     end
 
     def db_drop(name, storage)
-      OrientdbBinary::Protocols::DbDrop.new session: session, name: name, storage: storage
+      OrientdbBinary::Protocols::DbDrop.new(session: session, name: name, storage: storage).process(socket)
     end
 
     def get_config(key)
