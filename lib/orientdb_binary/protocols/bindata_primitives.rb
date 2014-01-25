@@ -29,10 +29,18 @@ module OrientdbBinary
       end
     end
 
-    class Long < BigData::Primitive
+    class Long < BinData::Primitive
       endian :big
 
       int64 :data
+
+      def get
+        data
+      end
+
+      def set(v)
+        self.data = v
+      end
     end
 
   end
