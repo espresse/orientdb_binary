@@ -13,7 +13,8 @@ module OrientdbBinary
     class DbSizeAnswer < BinData::Record
       endian :big
 
-      long :db_size
+      int32 :session
+      int64 :db_size
     end
   end
 end

@@ -13,6 +13,7 @@ module OrientdbBinary
     class DbCountRecordsAnswer < BinData::Record
       endian :big
 
+      int32 :session
       int64 :count_records
     end
   end

@@ -9,7 +9,6 @@ module OrientdbBinary
       connection = OrientdbBinary::Protocols::DbOpen.new(database_name: args[:db], storage: args[:storage],
                                                           user: args[:user], password: args[:password]
                                                         ).process(socket)
-
       @session = connection[:session]
       @connected = true if @session >= 0
       connection
@@ -28,7 +27,9 @@ module OrientdbBinary
     end
 
     def count_records
-      OrientdbBinary::Protocols::DbCountRecords.new(session: session).process(socket)
+      c = OrientdbBinary::Protocols::DbCountRecords.new(session: session)
+      p c
+      c.process(socket)
     end
 
     def add_datacluster

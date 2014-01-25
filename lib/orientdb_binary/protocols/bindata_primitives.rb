@@ -4,7 +4,7 @@ module OrientdbBinary
       endian :big
 
       int32 :len, value: -> { data.length }
-      string :data, :read_length => :len
+      string :data, read_length: :len
 
       def get
         data
@@ -28,20 +28,5 @@ module OrientdbBinary
         self.type = v.ord
       end
     end
-
-    class Long < BinData::Primitive
-      endian :big
-
-      int64 :data
-
-      def get
-        data
-      end
-
-      def set(v)
-        self.data = v
-      end
-    end
-
   end
 end
