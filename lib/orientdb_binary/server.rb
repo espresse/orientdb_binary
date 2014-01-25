@@ -10,7 +10,7 @@ module OrientdbBinary
                                                             user: args[:user],
                                                             password: args[:password]
                                                           ).process(socket)
-      @session = connection[:session]
+      @session = connection[:session] || OrientdbBinary::OperationTypes::NEW_SESSION
       @connected = true if @session > OrientdbBinary::OperationTypes::NEW_SESSION
       connection
     end
