@@ -25,6 +25,7 @@ module OrientdbBinary
     end
 
     def size
+      OrientdbBinary::Protocols::DbSize.new(session: session).process(socket)
     end
 
     def count_records

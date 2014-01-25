@@ -29,5 +29,11 @@ module OrientdbBinary
       end
     end
 
+    class long < BigData::Primitive
+      endian :big
+
+      int64 :data
+    end
+
   end
 end
