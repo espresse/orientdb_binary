@@ -12,7 +12,6 @@ module OrientdbBinary
 
       @server_connection = OrientdbBinary::Connection.new(@options)
       @socket = @server_connection.socket
-
       @connected = false
     end
 

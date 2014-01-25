@@ -1,6 +1,3 @@
-Request:  (type:string)(name:string)(location:string)(datasegment-name:string)(cluster-id:short - since 1.6 snapshot)
-Response: (new-cluster:short)
-
 module OrientdbBinary
   module Protocols
 
