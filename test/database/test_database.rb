@@ -12,21 +12,24 @@ describe OrientdbBinary::Database do
     @server.db_create(TestHelper::TEST_DB[:db], 'document', TestHelper::TEST_DB[:storage])
 
     @db = OrientdbBinary::Database.new(TestHelper::SERVER)
-    @db.open(TestHelper::TEST_DB.merge(TestHelper::TEST_DB_USER))
+    @open = @db.open(TestHelper::TEST_DB.merge(TestHelper::TEST_DB_USER))
   end
 
   after do
     if @server.db_exists? TestHelper::TEST_DB[:db]
       @server.db_drop TestHelper::TEST_DB[:db], TestHelper::TEST_DB[:storage]
     end
-    @server.disconnect
-
     @db.disconnect
+    @server.disconnect
   end
 
   describe 'database' do
     it "should be opened" do
       assert @db.connected?
+    end
+
+    it "should have info about build" do
+      assert @open[:orientdb_release].length > 0
     end
   end  
 end
