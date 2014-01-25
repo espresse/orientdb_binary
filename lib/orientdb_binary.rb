@@ -28,6 +28,7 @@ require 'orientdb_binary/protocols/db_close'
 require 'orientdb_binary/protocols/db_open'
 require 'orientdb_binary/protocols/db_reload'
 require 'orientdb_binary/protocols/db_size'
+require 'orientdb_binary/protocols/db_countrecords'
 require 'orientdb_binary/protocols/record_load'
 require 'orientdb_binary/protocols/command'
 

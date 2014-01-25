@@ -29,6 +29,7 @@ module OrientdbBinary
     end
 
     def count_records
+      OrientdbBinary::Protocols::DbCountRecords.new(session: session).process(socket)
     end
 
     def add_datacluster
