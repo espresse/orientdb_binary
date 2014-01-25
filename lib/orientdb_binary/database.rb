@@ -6,13 +6,12 @@ module OrientdbBinary
     end
 
     def open(args)
-      connection = OrientdbBinary::Protocols::DbOpen.new(version: protocol, database_name: args[:db],
-                                                          user: args[:user],
-                                                          password: args[:password]
+      connection = OrientdbBinary::Protocols::DbOpen.new(database_name: args[:db], storage: args[:storage],
+                                                          user: args[:user], password: args[:password]
                                                         ).process(socket)
 
       @session = connection[:session]
-      @opened = true if @session >= 0
+      @connected = true if @session >= 0
       connection
     end
 

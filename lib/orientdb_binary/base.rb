@@ -13,6 +13,7 @@ module OrientdbBinary
       @server_connection = OrientdbBinary::Connection.new(@options)
       @socket = @server_connection.socket
       @connected = false
+      @session = OrientdbBinary::OperationTypes::NEW_SESSION
     end
 
     def connected?

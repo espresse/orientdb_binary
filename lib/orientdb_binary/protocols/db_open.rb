@@ -11,10 +11,10 @@ module OrientdbBinary
 
       protocol_string :driver_name, value: OrientdbBinary::NAME
       protocol_string :driver_version, value: OrientdbBinary::VERSION
-      int16 :protocol
+      int16 :protocol, value: OrientdbBinary::PROTOCOL_VERSION
       protocol_string :client_id
       protocol_string :database_name
-      # protocol_string :database_type
+      protocol_string :storage
       protocol_string :user
       protocol_string :password
     end
@@ -24,13 +24,13 @@ module OrientdbBinary
 
       skip length: 4
       int32 :session
-      int32 :num_of_clusters
+      int16 :num_of_clusters
       array :clusters, initial_length: :num_of_clusters do
         protocol_string :cluster_name
         int16 :cluster_id
         protocol_string :cluster_type
+        int16 :cluster_data_segment_id
       end
-      int32 :a
     end
   end
 end

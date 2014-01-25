@@ -19,6 +19,19 @@ namespace :test do
 end
 
 namespace :test do
+  desc "Run database tests"
+  task :database do
+    $: << 'lib'
+    
+    $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
+    require_relative 'lib/orientdb_binary'
+    require 'test/test_helper'
+
+    Dir['./test/database/**/test_*.rb'].each { |test| require test }
+  end
+end
+
+namespace :test do
   desc "Run all tests and check coverage"
   task :all do
     $: << 'lib'
