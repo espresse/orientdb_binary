@@ -26,6 +26,8 @@ module OrientdbBinary
     end
 
     def close
+      @session = OrientdbBinary::OperationTypes::NEW_SESSION
+      @connected = false
     end
 
   end

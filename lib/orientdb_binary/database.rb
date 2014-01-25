@@ -16,6 +16,7 @@ module OrientdbBinary
 
     def close
       OrientdbBinary::Protocols::DbClose.new(session: session).process(socket)
+      super
     end
 
     def reload
