@@ -48,22 +48,22 @@ describe OrientdbBinary::Server do
 
   describe "database" do
     before do
-      if @server.db_exists? TestHelper::TEST_DB[:name]
-        @server.db_drop TestHelper::TEST_DB[:name], TestHelper::TEST_DB[:storage]
+      if @server.db_exists? TestHelper::TEST_DB[:db]
+        @server.db_drop TestHelper::TEST_DB[:db], TestHelper::TEST_DB[:storage]
       end
-      assert(!@server.db_exists?(TestHelper::TEST_DB[:name]))
+      assert(!@server.db_exists?(TestHelper::TEST_DB[:db]))
     end
 
     after do
-      if @server.db_exists? TestHelper::TEST_DB[:name]
-        @server.db_drop TestHelper::TEST_DB[:name], TestHelper::TEST_DB[:storage]
+      if @server.db_exists? TestHelper::TEST_DB[:db]
+        @server.db_drop TestHelper::TEST_DB[:db], TestHelper::TEST_DB[:storage]
       end
-      assert(!@server.db_exists?(TestHelper::TEST_DB[:name]))
+      assert(!@server.db_exists?(TestHelper::TEST_DB[:db]))
     end
       
     it "should create database" do
-      @server.db_create(TestHelper::TEST_DB[:name], 'document', TestHelper::TEST_DB[:storage])
-      assert @server.db_exists? TestHelper::TEST_DB[:name]
+      @server.db_create(TestHelper::TEST_DB[:db], 'document', TestHelper::TEST_DB[:storage])
+      assert @server.db_exists? TestHelper::TEST_DB[:db]
     end
   end
 end
