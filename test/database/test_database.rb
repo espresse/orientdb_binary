@@ -20,6 +20,7 @@ describe OrientdbBinary::Database do
       @server.db_drop TestHelper::TEST_DB[:db], TestHelper::TEST_DB[:storage]
     end
     @db.disconnect
+    assert !@db.connected?
     @server.disconnect
   end
 
@@ -30,6 +31,10 @@ describe OrientdbBinary::Database do
 
     it "should have info about build" do
       assert @open[:orientdb_release].length > 0
+    end
+
+    it "should count records" do
+      assert @db.count_records[:count_records] == 12 #(6 OIdentity + 3 OUser + 3 ORole)
     end
   end  
 end
