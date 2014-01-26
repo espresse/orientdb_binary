@@ -30,5 +30,11 @@ module OrientdbBinary
       @connected = false
     end
 
+    private
+    
+    def params (args)
+      args.merge(session: session)
+    end
+
   end
 end

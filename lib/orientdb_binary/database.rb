@@ -32,40 +32,31 @@ module OrientdbBinary
     end
 
     def add_datacluster(args)
-      OrientdbBinary::Protocols::DataclusterAdd.new(session: session, cluster_type: args[:type],
-                                                    name: args[:name], location: args[:location],
-                                                    datasegment_name: args[:datasegment_name]).process(socket)
+      OrientdbBinary::Protocols::DataclusterAdd.new(params(args)).process(socket)
     end
 
     def drop_datacluster(args)
-      OrientdbBinary::Protocols::DataclusterDrop.new(session: session, cluster_id: args[:cluster_id]).process(socket)
+      OrientdbBinary::Protocols::DataclusterDrop.new(params(args)).process(socket)
     end
 
     def count_datacluster(args)
-      OrientdbBinary::Protocols::DataclusterCount.new(session: session, cluster_count: args[:cluster_count],
-                                                      clusters: args[:clusters],
-                                                      count_tombstones: args[:count_tombstones]).process(socket)
+      OrientdbBinary::Protocols::DataclusterCount.new(params(args)).process(socket)
     end
 
     def datarange_datacluster(args)
-      OrientdbBinary::Protocols::DataclusterDatarange.new(session: session, cluster_id: args[:cluster_id]).process(socket)
+      OrientdbBinary::Protocols::DataclusterDatarange.new(params(args)).process(socket)
     end
 
     def add_datasegment(args)
-      OrientdbBinary::Protocols::DatasegmentAdd.new(session: session, name: args[:name],
-                                                    location: args[:location]).process(socket)
+      OrientdbBinary::Protocols::DatasegmentAdd.new(params(args)).process(socket)
     end
 
     def drop_datasegment(args)
-      OrientdbBinary::Protocols::DatasegmentDrop.new(session: session, name: args[:name]).process(socket)
+      OrientdbBinary::Protocols::DatasegmentDrop.new(params(args)).process(socket)
     end
 
     def load_record(cluster_id, cluster_position, fetch_plan, ignore_cache, load_tombstones)
-      OrientdbBinary::Protocols::RecordLoad.new(
-                                                session: session, cluster_id: cluster_id,
-                                                cluster_position: cluster_position, fetch_plan: fetch_plan,
-                                                ignore_cache: ignore_cache, load_tombstones: load_tombstones
-                                              ).process(socket)
+      OrientdbBinary::Protocols::RecordLoad.new(params(args)).process(socket)
     end
 
     def create_record

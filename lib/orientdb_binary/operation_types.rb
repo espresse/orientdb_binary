@@ -1,7 +1,7 @@
 module OrientdbBinary
   module OperationTypes
     NEW_SESSION                             = -1
-    REQUEST_SHUTDOWN                        =  1  
+    REQUEST_SHUTDOWN                        =  1
     REQUEST_CONNECT                         =  2
     REQUEST_DB_OPEN                         =  3
     REQUEST_DB_CREATE                       =  4
