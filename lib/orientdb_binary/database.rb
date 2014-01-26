@@ -31,7 +31,10 @@ module OrientdbBinary
       OrientdbBinary::Protocols::DbCountRecords.new(session: session).process(socket)
     end
 
-    def add_datacluster
+    def add_datacluster(args)
+      OrientdbBinary::Protocols::DataclusterAdd.new(session: session, cluster_type: args[:type],
+                                                    name: args[:name], location: args[:location],
+                                                    datasegment_name: args[:datasegment_name]).process(socket)
     end
 
     def drop_datacluster
@@ -43,10 +46,13 @@ module OrientdbBinary
     def datarange_datacluster
     end
 
-    def add_datasegment
+    def add_datasegment(args)
+      OrientdbBinary::Protocols::DatasegmentAdd.new(session: session, name: args[:name],
+                                                    location: args[:location]).process(socket)
     end
 
-    def drop_datasegment
+    def drop_datasegment(args)
+      OrientdbBinary::Protocols::DatasegmentDrop.new(session: session, name: args[:name]).process(socket)
     end
 
     def load_record(cluster_id, cluster_position, fetch_plan, ignore_cache, load_tombstones)

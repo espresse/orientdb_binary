@@ -36,5 +36,26 @@ describe OrientdbBinary::Database do
     it "should count records" do
       assert @db.count_records[:count_records] == 12 #(6 OIdentity + 3 OUser + 3 ORole)
     end
+
+    it "should reload database" do
+      answer = @db.reload()
+      assert_equal answer[:num_of_clusters], answer[:clusters].length
+    end
+
+    it "should add datasegment" do
+      assert @db.add_datasegment(name: 'test_datasegment', location: 'test_location')[:segment_id] > 0
+    end
+
+    it "should drop datasegment" do
+      @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
+      @db.drop_datasegment(name: 'test_datasegment')
+      assert @db.reload()[:clusters].last[:cluster_name] != 'testmemory'
+    end
+
+    it "should add datacluster" do
+      @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
+      @db.add_datacluster(type: 'MEMORY', name: 'testmemory', location: 'test_location', datasegment_name: 'test_datasegment')
+      assert @db.reload()[:clusters].last[:cluster_name] == "testmemory"
+    end
   end  
 end

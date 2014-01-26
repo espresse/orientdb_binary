@@ -7,7 +7,7 @@ module OrientdbBinary
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_DB_RELOAD
-      int32 :session, value: OrientdbBinary::OperationTypes::NEW_SESSION
+      int32 :session
     end
 
     class DbReloadAnswer < BinData::Record
