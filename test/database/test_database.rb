@@ -71,6 +71,10 @@ describe OrientdbBinary::Database do
         assert @db.reload()[:clusters].last[:cluster_name] != "testmemory"
         @datacluster = nil
       end
+
+      it "should count" do
+        assert_equal 6, @db.count_datacluster(cluster_count: 3, clusters: [0,1,2])[:records_in_clusters]
+      end
     end
   end  
 end

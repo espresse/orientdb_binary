@@ -41,7 +41,10 @@ module OrientdbBinary
       OrientdbBinary::Protocols::DataclusterDrop.new(session: session, cluster_id: args[:cluster_id]).process(socket)
     end
 
-    def count_datacluster
+    def count_datacluster(args)
+      OrientdbBinary::Protocols::DataclusterCount.new(session: session, cluster_count: args[:cluster_count],
+                                                      clusters: args[:clusters],
+                                                      count_tombstones: args[:count_tombstones]).process(socket)
     end
 
     def datarange_datacluster
