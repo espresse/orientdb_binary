@@ -32,6 +32,7 @@ require 'orientdb_binary/protocols/db_countrecords'
 require 'orientdb_binary/protocols/datasegment_add'
 require 'orientdb_binary/protocols/datasegment_drop'
 require 'orientdb_binary/protocols/datacluster_add'
+require 'orientdb_binary/protocols/datacluster_drop'
 require 'orientdb_binary/protocols/record_load'
 require 'orientdb_binary/protocols/command'
 

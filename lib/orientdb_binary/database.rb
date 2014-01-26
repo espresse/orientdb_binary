@@ -37,7 +37,8 @@ module OrientdbBinary
                                                     datasegment_name: args[:datasegment_name]).process(socket)
     end
 
-    def drop_datacluster
+    def drop_datacluster(args)
+      OrientdbBinary::Protocols::DataclusterDrop.new(session: session, cluster_id: args[:cluster_id]).process(socket)
     end
 
     def count_datacluster

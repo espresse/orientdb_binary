@@ -48,14 +48,29 @@ describe OrientdbBinary::Database do
 
     it "should drop datasegment" do
       @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
-      @db.drop_datasegment(name: 'test_datasegment')
-      assert @db.reload()[:clusters].last[:cluster_name] != 'testmemory'
+      assert @db.drop_datasegment(name: 'test_datasegment')[:succeed]
     end
 
-    it "should add datacluster" do
-      @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
-      @db.add_datacluster(type: 'MEMORY', name: 'testmemory', location: 'test_location', datasegment_name: 'test_datasegment')
-      assert @db.reload()[:clusters].last[:cluster_name] == "testmemory"
+    describe 'datacluster' do
+      before do
+        @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
+        @datacluster = @db.add_datacluster(type: 'MEMORY', name: 'testmemory', location: 'test_location', datasegment_name: 'test_datasegment')
+      end
+
+      after do
+        @db.drop_datacluster(@datacluster) if @datacluster
+      end
+      
+      it "should add" do
+        assert @db.reload()[:clusters].last[:cluster_name] == "testmemory"
+      end
+
+      it "should drop" do
+        @db.drop_datacluster(@datacluster)
+        @db.reload()[:clusters]
+        assert @db.reload()[:clusters].last[:cluster_name] != "testmemory"
+        @datacluster = nil
+      end
     end
   end  
 end
