@@ -47,6 +47,11 @@ module OrientdbBinary
       OrientdbBinary::Protocols::DataclusterDatarange.new(params(args)).process(socket)
     end
 
+    def datacluster_lh_cluster_is_used()
+      # OrientdbBinary::Protocols::DataclusterLhClusterIsUsed.new(session: session).process(socket)
+      # it looks like it's not supported (?)
+    end
+
     def add_datasegment(args)
       OrientdbBinary::Protocols::DatasegmentAdd.new(params(args)).process(socket)
     end

@@ -29,9 +29,9 @@ describe OrientdbBinary::Database do
       assert @db.connected?
     end
 
-    # it "should have info about build" do
-    #   assert @open[:orientdb_release].length > 0
-    # end
+    it "should have info about build" do
+      assert @open[:orientdb_release].length > 0
+    end
 
     it "should count records" do
       assert @db.count_records[:count_records] == 12 #(6 OIdentity + 3 OUser + 3 ORole)

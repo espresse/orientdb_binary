@@ -35,6 +35,7 @@ require 'orientdb_binary/protocols/datacluster_add'
 require 'orientdb_binary/protocols/datacluster_drop'
 require 'orientdb_binary/protocols/datacluster_count'
 require 'orientdb_binary/protocols/datacluster_datarange'
+require 'orientdb_binary/protocols/datacluster_lh_cluster_is_used'
 require 'orientdb_binary/protocols/record_load'
 require 'orientdb_binary/protocols/command'
 
