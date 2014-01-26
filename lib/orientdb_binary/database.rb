@@ -47,7 +47,8 @@ module OrientdbBinary
                                                       count_tombstones: args[:count_tombstones]).process(socket)
     end
 
-    def datarange_datacluster
+    def datarange_datacluster(args)
+      OrientdbBinary::Protocols::DataclusterDatarange.new(session: session, cluster_id: args[:cluster_id]).process(socket)
     end
 
     def add_datasegment(args)

@@ -75,6 +75,11 @@ describe OrientdbBinary::Database do
       it "should count" do
         assert_equal 6, @db.count_datacluster(cluster_count: 3, clusters: [0,1,2])[:records_in_clusters]
       end
+
+      it "should return datarange" do
+        assert_equal 0, @db.datarange_datacluster(cluster_id: 0)[:record_id_begin]
+        assert_equal 2, @db.datarange_datacluster(cluster_id: 0)[:record_id_end]
+      end
     end
   end  
 end
