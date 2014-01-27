@@ -7,29 +7,29 @@ module OrientdbBinary
 
       # the code below comes from orientdb-node parser module
       # it needs to be tested, checked and refactored to be more Ruby
-      
+
       def deserialize_document(serialized, document={}, is_map=false)
         serialized = serialized.trim
         class_index = serialized.index('@')
         colon_index = serialized.index(':')
         if class_index && (!colon_index || colon_ndex > class_index)
-          @record[:class] = serialized[0..class_index]
+          @record[:class] = serialized[0...class_index]
           serialized = serialized[class_index..-1]
         end
 
         @record["type"] = "d" unless is_map
 
         while (field_index = serialized.index(':') do
-          field = serialized[0..field_index]
-          serialized = serialized[field_index+1..-1]
+          field = serialized[0...field_index]
+          serialized = serialized[field_index..-1]
 
           if field[0] == "\"" and field[-1] == "\""
             field = field[1..-2]
           end
 
           comma_index = look_for_comma_index(serialized)
-          value = serialized[0..comma_index]
-          serialized = serialized[comma_index+1..-1]
+          value = serialized[0...comma_index]
+          serialized = serialized[comma_index..-1]
           value = deserialize_field_value(value)
           @record[field.to_sym] = value
         end
@@ -52,6 +52,7 @@ module OrientdbBinary
           return val
         end
 
+        # split for date and datetime
         if ["t", "a"].include? last_char
           return Date.new(value[0..-1])
         end
@@ -64,6 +65,7 @@ module OrientdbBinary
           return deserialize_document(value[1..-2], {}, true)
         end
 
+        # split for list and set
         if ["[", "<"].include? first_char
           ret = []
           values = split_values_from(value[1..-2])
@@ -77,10 +79,12 @@ module OrientdbBinary
           return value[0..-1].to_i.chr
         end
 
+        # split for long/short/byte
         if ["l", "s", "c"].include? last_char
           return value[0..-2].to_i
         end
 
+        # split for float, big decimal
         if ["f", "d"].include? last_char
           return value[0..-2].to_f
         end
@@ -94,8 +98,8 @@ module OrientdbBinary
         result = []
         while value.length > 0
           comma_at = look_for_comma_index(value)
-          result << value[0..comma_at]
-          value = value[comma_at+1..-1]
+          result << value[0...comma_at]
+          value = value[comma_at..-1]
         end
         result
       end
@@ -134,6 +138,7 @@ module OrientdbBinary
         when "(" then return ")"
         when "<" then return ">"
         else return "\""
+        end
       end
     end
   end
