@@ -60,7 +60,7 @@ describe OrientdbBinary::Database do
       after do
         @db.drop_datacluster(cluster_id: @datacluster[:cluster_id]) if @datacluster
       end
-      
+
       it "should add" do
         assert @db.reload()[:clusters].last[:cluster_name] == "testmemory"
       end
@@ -81,5 +81,5 @@ describe OrientdbBinary::Database do
         assert_equal 2, @db.datarange_datacluster(cluster_id: 0)[:record_id_end]
       end
     end
-  end  
+  end
 end

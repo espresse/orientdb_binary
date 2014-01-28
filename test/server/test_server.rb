@@ -60,7 +60,7 @@ describe OrientdbBinary::Server do
       end
       assert(!@server.db_exists?(TestHelper::TEST_DB[:db]))
     end
-      
+
     it "should create database" do
       @server.db_create(TestHelper::TEST_DB[:db], 'document', TestHelper::TEST_DB[:storage])
       assert @server.db_exists? TestHelper::TEST_DB[:db]
