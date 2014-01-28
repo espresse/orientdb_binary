@@ -3,7 +3,7 @@ module OrientdbBinary
 
     class DatasegmentAdd < BinData::Record
       include OrientdbBinary::Protocols::Base
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_DATASEGMENT_ADD

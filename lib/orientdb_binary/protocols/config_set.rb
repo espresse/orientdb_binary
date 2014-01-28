@@ -3,7 +3,7 @@ module OrientdbBinary
 
     class ConfigSet < BinData::Record
       include OrientdbBinary::Protocols::Base
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_CONFIG_SET

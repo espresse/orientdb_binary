@@ -60,7 +60,8 @@ module OrientdbBinary
       OrientdbBinary::Protocols::DatasegmentDrop.new(params(args)).process(socket)
     end
 
-    def load_record(cluster_id, cluster_position, fetch_plan, ignore_cache, load_tombstones)
+    def load_record(args)
+      # cluster_id, cluster_position, fetch_plan, ignore_cache, load_tombstones
       OrientdbBinary::Protocols::RecordLoad.new(params(args)).process(socket)
     end
 
@@ -107,7 +108,7 @@ module OrientdbBinary
 
     #   p OrientdbBinary::Protocols::CommandAnswer.read(socket)
     # end
-    
+
     def tx_commit
     end
 

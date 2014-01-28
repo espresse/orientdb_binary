@@ -6,7 +6,8 @@ module OrientdbBinary
       protocol_string :content
 
       def get
-        self.content = OrientdbBinary::Serialization::Deserialize.new(self.content).deserialize
+        # self.content = OrientdbBinary::Serialization::Deserialize.new(self.content).deserialize
+        self.content
       end
 
       def set(v)
@@ -15,6 +16,8 @@ module OrientdbBinary
     end
 
     class RecordLoad < BinData::Record
+      include OrientdbBinary::Protocols::Base
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_RECORD_LOAD

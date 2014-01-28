@@ -2,7 +2,7 @@ module OrientdbBinary
   module Protocols
     class Connect < BinData::Record
       include OrientdbBinary::Protocols::Base
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_CONNECT

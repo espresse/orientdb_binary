@@ -1,5 +1,6 @@
 require 'socket'
 require 'bindata'
+require 'set'
 
 require "orientdb_binary/config"
 

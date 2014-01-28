@@ -3,7 +3,7 @@ module OrientdbBinary
 
     class DataclusterLhClusterIsUsed < BinData::Record
       include OrientdbBinary::Protocols::Base
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_DATACLUSTER_LH_CLUSTER_IS_USED

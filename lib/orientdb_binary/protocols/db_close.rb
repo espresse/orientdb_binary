@@ -2,7 +2,7 @@ module OrientdbBinary
   module Protocols
 
     class DbClose < BinData::Record
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_DB_CLOSE
