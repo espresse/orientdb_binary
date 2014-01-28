@@ -1,7 +1,20 @@
 require "bundler/gem_tasks"
 task :default => [:test]
 
-test_tasks = ['test:server']
+
+task :build do
+  system "gem build orientdb-binary.gemspec"
+end
+
+task :release => :build do
+  system "gem push orientdb-binary-#{OrientdbBinary::VERSION}"
+end
+
+task install do
+  system "gem install orientdb-binary-#{OrientdbBinary::Version}"
+end
+
+test_tasks = ['test:all']
 desc "Run all tests"
 task :test => test_tasks
 
@@ -9,7 +22,7 @@ namespace :test do
   desc "Run server tests"
   task :server do
     $: << 'lib'
-    
+
     $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
     require_relative 'lib/orientdb_binary'
     require 'test/test_helper'
@@ -22,7 +35,7 @@ namespace :test do
   desc "Run database tests"
   task :database do
     $: << 'lib'
-    
+
     $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
     require_relative 'lib/orientdb_binary'
     require 'test/test_helper'
@@ -36,7 +49,7 @@ namespace :test do
   task :all do
     $: << 'lib'
     require 'simplecov'
-    
+
     SimpleCov.start do
       add_filter "test"
       command_name 'Mintest'
