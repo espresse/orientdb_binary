@@ -10,7 +10,7 @@ task :release => :build do
   system "gem push orientdb-binary-#{OrientdbBinary::VERSION}"
 end
 
-task install do
+task :install do
   system "gem install orientdb-binary-#{OrientdbBinary::Version}"
 end
 
