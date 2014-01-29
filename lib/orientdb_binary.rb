@@ -1,10 +1,13 @@
 require 'socket'
 require 'bindata'
 require 'set'
+require 'bigdecimal'
+require 'date'
 
 require "orientdb_binary/config"
 
 require 'orientdb_binary/serialization/deserialize'
+require 'orientdb_binary/serialization/serialize'
 
 require 'orientdb_binary/operation_types'
 require 'orientdb_binary/protocols/base'
