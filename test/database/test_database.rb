@@ -81,5 +81,32 @@ describe OrientdbBinary::Database do
         assert_equal 2, @db.datarange_datacluster(cluster_id: 0)[:record_id_end]
       end
     end
+
+    describe "record" do
+      it "should be possible to add it" do
+        params = {
+          datasegment_id: -1,
+          cluster_id: 5,
+          record_content: "OUser@name:\"other_admin\",password:\"{SHA-256}8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918\",status:\"ACTIVE\",roles:<#4:0>",
+          record_type: 100,
+          mode: 0
+        }
+        record = @db.create_record(params)
+        assert record[:cluster_position].to_i > 0
+      end
+
+      it "should be able to read content" do
+        record = @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:0", ignore_cache: 1, load_tombstones: 0)
+        assert_equal record[:payload_status], 1
+        assert !!record[:collection]
+      end
+
+      it "should be able to pre-fetch linked collection" do
+        record = @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:-1", ignore_cache: 1, load_tombstones: 0)
+        assert_equal record[:prefetched_records].length, 2
+        assert !!record[:prefetched_records][0][:record_content]
+      end
+
+    end
   end
 end

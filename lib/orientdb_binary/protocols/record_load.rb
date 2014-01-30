@@ -21,7 +21,7 @@ module OrientdbBinary
 
       int32 :session
       int8 :payload_status
-      array :rec, initial_length: :payload_status do
+      array :collection, initial_length: :payload_status do
         protocol_string :content
         int32 :version
         record_type :record_type
