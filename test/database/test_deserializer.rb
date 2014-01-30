@@ -1,11 +1,11 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 
-describe OrientdbBinary::Serialization do
+describe OrientdbBinary::Parser do
 
-  describe 'Deserialize' do
+  describe 'Deserializer' do
     before do
-      @parser = OrientdbBinary::Serialization::Deserialize.new
+      @parser = OrientdbBinary::Parser::Deserializer.new
     end
 
     describe "parsing sets" do

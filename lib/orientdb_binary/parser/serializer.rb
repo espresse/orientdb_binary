@@ -1,6 +1,6 @@
 module OrientdbBinary
-  module Serialization
-    class Serialize
+  module Parser
+    class Serializer
       def initialize()
       end
 

@@ -1,6 +1,6 @@
 module OrientdbBinary
-  module Serialization
-    class Deserialize
+  module Parser
+    class Deserializer
       attr_accessor :record
 
       def initialize()

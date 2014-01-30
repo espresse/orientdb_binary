@@ -6,8 +6,8 @@ require 'date'
 
 require "orientdb_binary/config"
 
-require 'orientdb_binary/serialization/deserialize'
-require 'orientdb_binary/serialization/serialize'
+require 'orientdb_binary/parser/deserializer'
+require 'orientdb_binary/parser/serializer'
 
 require 'orientdb_binary/operation_types'
 require 'orientdb_binary/protocols/base'

@@ -79,7 +79,7 @@ module OrientdbBinary
 
     def query(text, params, fetch_plan="*:0")
       class_name = 'com.orientechnologies.orient.core.sql.query.OSQLSynchQuery'
-      serialized_params = OrientdbBinary::Serialization::Serialize.new.serialize_document({params: params})
+      serialized_params = OrientdbBinary::Parser::Serializer.new.serialize_document({params: params})
       q = OrientdbBinary::Protocols::SqlCommandPayload.new text: text, serialized_params: serialized_params,
                                                           fetch_plan: fetch_plan,
                                                           class_name: class_name
