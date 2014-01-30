@@ -107,6 +107,19 @@ describe OrientdbBinary::Database do
         assert !!record[:prefetched_records][0][:record_content]
       end
 
+      it "should be able to update" do
+        params = {
+          cluster_id: 5,
+          cluster_position: 0,
+          record_content: "OUser@name:\"other_admin\",password:\"{SHA-256}8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918\",status:\"ACTIVE\",roles:<#4:0>",
+          record_version: 0,
+          record_type: 100,
+          mode: 0
+        }
+        record = @db.update_record(params)
+        assert_equal record[:record_version], 1
+      end
+
     end
   end
 end

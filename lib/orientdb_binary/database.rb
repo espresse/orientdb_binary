@@ -69,7 +69,8 @@ module OrientdbBinary
       OrientdbBinary::Protocols::RecordCreate.new(params(args)).process(socket)
     end
 
-    def update_record
+    def update_record(args)
+      OrientdbBinary::Protocols::RecordUpdate.new(params(args)).process(socket)
     end
 
     def delete_record
