@@ -71,12 +71,11 @@ module OrientdbBinary
               klass = value
             else
               field_wrap = is_map ? "\"" : ""
-              result << "#{field_wrap}#{key.to_s}#{field_wrap}:#{serialize_field_value(value)}"
+              result << "#{key.to_s}:#{serialize_field_value(value)}"
             end
           end
         end
-
-        return klass + "@" + result.join(',')
+        return klass.empty? ? result.join(',') : klass + "@" + result.join(',')
       end
     end
   end
