@@ -30,7 +30,7 @@ module OrientdbBinary
             int16 :cluster_id
             int64 :position
             int32 :version
-            record_content :record_content
+            protocol_string :record_content
       end
     end
 
@@ -57,7 +57,7 @@ module OrientdbBinary
         int16 :cluster_id
         int64 :position
         int32 :version
-        record_content :record_content
+        protocol_string :record_content
       end
       array :prefetched_records, read_until: -> {element.payload_status == 0} do
         int8  :payload_status        
@@ -66,8 +66,7 @@ module OrientdbBinary
         int16 :cluster_id, onlyif: -> {payload_status > 0}
         int64 :position, onlyif: -> {payload_status > 0}
         int32 :version, onlyif: -> {payload_status > 0}
-        record_content :record_content, onlyif: -> {payload_status > 0}
-        
+        protocol_string :record_content, onlyif: -> {payload_status > 0}        
       end
 
     end
@@ -104,15 +103,6 @@ module OrientdbBinary
 
       bit8 :mode
       protocol_string :command_payload
-
-      def process(socket)
-        write(socket)
-
-        status = BinData::Int8.read(socket).to_i
-        process_errors(socket, status)
-
-        p constantize("#{self.class.to_s}Answer").read(socket)
-      end
     end
 
     # class CommandAnswer < BinData::Record
