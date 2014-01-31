@@ -65,10 +65,12 @@ module OrientdbBinary
       OrientdbBinary::Protocols::RecordLoad.new(params(args)).process(socket)
     end
 
-    def create_record
+    def create_record(args)
+      OrientdbBinary::Protocols::RecordCreate.new(params(args)).process(socket)
     end
 
-    def update_record
+    def update_record(args)
+      OrientdbBinary::Protocols::RecordUpdate.new(params(args)).process(socket)
     end
 
     def delete_record
@@ -77,12 +79,14 @@ module OrientdbBinary
     def count
     end
 
-    # def query(text, params)
-    #   class_name = 'com.orientechnologies.orient.core.sql.OCommandSQL'
-    #   q = OrientdbBinary::Protocols::SqlCommandPayload.new text: text, serialized_params: "params:#{JSON.generate(params)}",
-    #                                                       class_name: class_name
-    #   _command(q.to_binary_s, class_name)
-    # end
+    def query(text, params, fetch_plan="*:0")
+      class_name = 'com.orientechnologies.orient.core.sql.query.OSQLSynchQuery'
+      serialized_params = OrientdbBinary::Parser::Serializer.new.serialize_document({params: params})
+      q = OrientdbBinary::Protocols::SqlCommandPayload.new text: text, serialized_params: serialized_params,
+                                                          fetch_plan: fetch_plan,
+                                                          class_name: class_name
+      _command(q.to_binary_s, class_name)
+    end
 
     # def script(text)
     #   class_name = 'com.orientechnologies.orient.core.sql.OCommandSQL'

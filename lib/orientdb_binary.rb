@@ -2,11 +2,12 @@ require 'socket'
 require 'bindata'
 require 'set'
 require 'bigdecimal'
+require 'date'
 
 require "orientdb_binary/config"
 
-require 'orientdb_binary/serialization/deserialize'
-require 'orientdb_binary/serialization/serialize'
+require 'orientdb_binary/parser/deserializer'
+require 'orientdb_binary/parser/serializer'
 
 require 'orientdb_binary/operation_types'
 require 'orientdb_binary/protocols/base'
@@ -40,6 +41,8 @@ require 'orientdb_binary/protocols/datacluster_count'
 require 'orientdb_binary/protocols/datacluster_datarange'
 require 'orientdb_binary/protocols/datacluster_lh_cluster_is_used'
 require 'orientdb_binary/protocols/record_load'
+require 'orientdb_binary/protocols/record_create'
+require 'orientdb_binary/protocols/record_update'
 require 'orientdb_binary/protocols/command'
 
 require 'orientdb_binary/server'

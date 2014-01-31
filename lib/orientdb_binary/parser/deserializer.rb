@@ -1,6 +1,6 @@
 module OrientdbBinary
-  module Serialization
-    class Deserialize
+  module Parser
+    class Deserializer
       attr_accessor :record
 
       def initialize()
@@ -21,9 +21,9 @@ module OrientdbBinary
         class_index = serialized.index('@')
         colon_index = serialized.index(':')
         if class_index && (!colon_index || colon_index > class_index)
-          @record[:class], serialized = split(serialized, class_index)
+          document[:@class], serialized = split(serialized, class_index)
         end
-        @record[:type] = "d" unless is_map
+        document[:@type] = "d" unless is_map
 
         while (serialized and field_index = serialized.index(':')) do
           field, serialized = split(serialized, field_index)
@@ -34,10 +34,10 @@ module OrientdbBinary
 
           comma_index = look_for_comma_index(serialized)
           value, serialized = split(serialized, comma_index)
-
           value = deserialize_field_value(value)
-          @record[field.to_sym] = value
+          document[field.to_sym] = value
         end
+        document
       end
 
       def deserialize_field_value(value)
@@ -59,11 +59,13 @@ module OrientdbBinary
 
         # split for date and datetime
         if ["t", "a"].include? last_char
-          return Date.new(value[0..-1])
+          date = DateTime.strptime(value[0..-1],'%s')
+          date = date.to_date if last_char == "a"
+          return date
         end
 
         if "(" == first_char
-          return deserialize_document(value[1..-1])
+          return deserialize_document(value[1..-2])
         end
 
         if "{" == first_char
@@ -74,7 +76,7 @@ module OrientdbBinary
           ret = [] if first_char == "["
           ret = Set.new if first_char == "<"
 
-          values = split_values_from(value[1..-1])
+          values = split_values_from(value[1..-2])
           values.each { |val| ret << deserialize_field_value(val) }
           return ret
         end
@@ -89,15 +91,11 @@ module OrientdbBinary
         end
 
         if "c" == last_char
-          return value[0..-2].to_i.chr
+          return BigDecimal.new(value[0..-2].to_i)
         end
 
-        if "f" == last_char
+        if ["f", "d"].include? last_char
           return value[0..-2].to_f
-        end
-
-        if "d" == last_char
-          return value[0..-2].to_d
         end
 
         return value.to_i if value.to_i.to_s == value
