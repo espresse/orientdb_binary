@@ -66,7 +66,7 @@ module OrientdbBinary
         klass = ""
         result = []
         document.each do |key, value|
-          unless [:@version, :@rid, :@type].include? key
+          unless [:@version, :@rid, :@type, :@cluster].include? key
             if key == :@class
               klass = value
             else

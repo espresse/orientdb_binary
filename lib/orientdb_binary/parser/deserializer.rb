@@ -7,13 +7,18 @@ module OrientdbBinary
         @record = {}
       end
 
-      # the code below comes from orientdb-node parser module
-      # it needs to be tested, checked and refactored to be more Ruby
-
       def split(serialized, position)
         first = serialized[0...position]
         second = serialized[position+1..-1]
         return first, second
+      end
+
+      def deserialize(document, params={})
+        @record = deserialize_document(document)
+        params.each do |k,v|
+          @record[k] = v
+        end
+        @record
       end
 
       def deserialize_document(serialized, document={}, is_map=false)
@@ -82,7 +87,7 @@ module OrientdbBinary
         end
 
         if "b" == last_char
-          return value[0..-1].to_i.chr
+          return value[0..-2].to_i
         end
 
         # split for long/short?
@@ -102,6 +107,8 @@ module OrientdbBinary
 
         return value
       end
+
+      private
 
       def split_values_from(value)
         result = []

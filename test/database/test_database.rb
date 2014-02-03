@@ -46,6 +46,10 @@ describe OrientdbBinary::Database do
       assert @db.add_datasegment(name: 'test_datasegment', location: 'test_location')[:segment_id] > 0
     end
 
+    it "should add datasegment providing name only" do
+      assert @db.add_datasegment(name: 'test_datasegment_1')[:segment_id] > 0
+    end
+
     it "should drop datasegment" do
       @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
       assert @db.drop_datasegment(name: 'test_datasegment')[:succeed]
@@ -65,6 +69,12 @@ describe OrientdbBinary::Database do
         assert @db.reload()[:clusters].last[:cluster_name] == "testmemory"
       end
 
+      it "should add datacluster without optional params" do
+        datacluster = @db.add_datacluster(name: 'test_cluster', datasegment_name: 'default')
+        assert @db.reload()[:clusters].last[:cluster_name] == "test_cluster"
+        @db.drop_datacluster(cluster_id: datacluster[:cluster_id])
+      end
+
       it "should drop" do
         @db.drop_datacluster(cluster_id: @datacluster[:cluster_id])
         @db.reload()[:clusters]
@@ -72,13 +82,28 @@ describe OrientdbBinary::Database do
         @datacluster = nil
       end
 
+      it "should drop datacluster when providing name of it" do
+        @db.drop_datacluster(cluster_name: 'testmemory')
+      end
+
       it "should count" do
-        assert_equal 6, @db.count_datacluster(cluster_count: 3, clusters: [0,1,2])[:records_in_clusters]
+        assert_equal 6, @db.count_datacluster(cluster_ids: [0,1,2])[:records_in_clusters]
+      end
+
+      it "should count clusters by name" do
+        assert_equal 6, @db.count_datacluster(cluster_names: ['internal','index','manindex'])[:records_in_clusters]
       end
 
       it "should return datarange" do
-        assert_equal 0, @db.datarange_datacluster(cluster_id: 0)[:record_id_begin]
-        assert_equal 2, @db.datarange_datacluster(cluster_id: 0)[:record_id_end]
+        range = @db.datarange_datacluster(cluster_id: 0)
+        assert_equal 0, range[:record_id_begin]
+        assert_equal 2, range[:record_id_end]
+      end
+
+      it "should return datarange" do
+        range = @db.datarange_datacluster(cluster_name: 'internal')
+        assert_equal 0, range[:record_id_begin]
+        assert_equal 2, range[:record_id_end]
       end
     end
 
@@ -92,19 +117,50 @@ describe OrientdbBinary::Database do
           mode: 0
         }
         record = @db.create_record(params)
-        assert record[:cluster_position].to_i > 0
+        match = record[:@rid].match /#(?<version>\d+):(?<position>\d+)/
+        assert match[:position].to_i > 0
+      end
+
+      it "should be possible to add object with class" do
+        record = {
+          :@class => "OUser",
+          name: "other_admin",
+          password: "{SHA-256}8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918",
+          status: "ACTIVE",
+          roles: (Set.new ["#4:0"])
+        }
+        record = @db.create_record_from_object(record)
+        match = record[:@rid].match /#(?<version>\d+):(?<position>\d+)/
+        assert match[:position].to_i == 0 #cluster_id is set to default and s there is no records position is to 0
+      end
+
+      it "should be possible to add object with cluster" do
+        record = {
+          :@class => "OUser",
+          :@cluster => "ouser",
+          name: "other_admin",
+          password: "{SHA-256}8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918",
+          status: "ACTIVE",
+          roles: (Set.new ["#4:0"])
+        }
+        record = @db.create_record_from_object(record)
+        match = record[:@rid].match /#(?<version>\d+):(?<position>\d+)/
+        assert match[:position].to_i > 0
       end
 
       it "should be able to read content" do
         record = @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:0", ignore_cache: 1, load_tombstones: 0)
-        assert_equal record[:payload_status], 1
-        assert !!record[:collection]
+        assert record[:collection].length > 0
+      end
+
+      it "should be able to load record by providing rid only" do
+        record = @db.load_record(rid: "#5:0")
+        assert record[:collection].length > 0
       end
 
       it "should be able to pre-fetch linked collection" do
         record = @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:-1", ignore_cache: 1, load_tombstones: 0)
-        assert_equal record[:prefetched_records].length, 2
-        assert !!record[:prefetched_records][0][:record_content]
+        assert_equal record[:prefetched_records].length, 1
       end
 
       it "should be able to update" do
@@ -120,6 +176,18 @@ describe OrientdbBinary::Database do
         assert_equal record[:record_version], 1
       end
 
+      describe "delete" do
+        before do
+          @delete_action = @db.delete_record(cluster_id: 5, cluster_position: 0, record_version: 0, mode: 0)
+        end
+        it "should hav epayload status set to 1" do
+          assert_equal 1, @delete_action[:payload_status]
+        end
+
+        it "should not load record" do
+           assert_equal 0, @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:-1", ignore_cache: 1, load_tombstones: 0)[:collection].length
+        end
+      end
     end
   end
 end

@@ -27,14 +27,38 @@ module OrientdbBinary
         record_type :record_type
       end
 
-      array :prefetched_records, read_until: -> {element.payload_status == 0} do
-        int8  :payload_status        
+      array :prefetched_records, read_until: -> {element.payload_status == 0}, onlyif: -> {payload_status > 0} do
+        int8  :payload_status
         int16 :marker, onlyif: -> {payload_status > 0}
-        int8 :record_type, onlyif: -> {payload_status > 0}
+        record_type :record_type, onlyif: -> {payload_status > 0}
         int16 :cluster_id, onlyif: -> {payload_status > 0}
         int64 :position, onlyif: -> {payload_status > 0}
         int32 :version, onlyif: -> {payload_status > 0}
-        protocol_string :record_content, onlyif: -> {payload_status > 0}        
+        protocol_string :content, onlyif: -> {payload_status > 0}
+      end
+
+      def process(options)
+        colls = self.collection.map do |record|
+          opts = {
+            :@rid => "##{options[:cluster_id]}:#{options[:cluster_position]}",
+            :@version => record[:version],
+            :@type => record[:record_type]
+          }
+          OrientdbBinary::Parser::Deserializer.new().deserialize(record[:content], opts)
+        end
+
+        prefetched = self.prefetched_records.map do |record|
+          if record[:payload_status] > 0
+            opts = {
+              :@rid => "##{record[:cluster_id]}:#{record[:position]}",
+              :@version => record[:version],
+              :@type => record[:record_type]
+            }
+            OrientdbBinary::Parser::Deserializer.new().deserialize(record[:content], opts)
+          end
+        end
+
+        {collection: colls, prefetched_records: prefetched.delete_if {|rec| !rec}}
       end
     end
   end

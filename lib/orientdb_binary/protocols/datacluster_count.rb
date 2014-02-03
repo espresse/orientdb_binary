@@ -10,7 +10,7 @@ module OrientdbBinary
       int32 :session
 
       int16 :cluster_count
-      array :clusters, initial_length: :cluster_count do
+      array :cluster_ids, initial_length: :cluster_count do
         int16 :cluster_number
       end
       int8 :count_tombstones

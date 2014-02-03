@@ -65,5 +65,9 @@ describe OrientdbBinary::Server do
       @server.db_create(TestHelper::TEST_DB[:db], 'document', TestHelper::TEST_DB[:storage])
       assert @server.db_exists? TestHelper::TEST_DB[:db]
     end
+
+    it "should list databases" do
+      assert @server.list[:databases].has_key?(:GratefulDeadConcerts)
+    end
   end
 end
