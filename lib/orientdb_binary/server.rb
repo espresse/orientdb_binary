@@ -1,3 +1,14 @@
+require 'orientdb_binary/protocols/connect'
+require 'orientdb_binary/protocols/db_exist'
+require 'orientdb_binary/protocols/db_create'
+require 'orientdb_binary/protocols/db_drop'
+require 'orientdb_binary/protocols/db_freeze'
+require 'orientdb_binary/protocols/db_release'
+require 'orientdb_binary/protocols/shutdown'
+require 'orientdb_binary/protocols/config_list'
+require 'orientdb_binary/protocols/config_get'
+require 'orientdb_binary/protocols/config_set'
+
 module OrientdbBinary
   class Server < OrientdbBinary::OrientdbBase
     def self.connect(options)
@@ -26,6 +37,18 @@ module OrientdbBinary
 
     def db_drop(name, storage)
       OrientdbBinary::Protocols::DbDrop.new(session: session, name: name, storage: storage).process(socket)
+    end
+
+    def list
+      OrientdbBinary::Protocols::DbList.new(session: session).process(socket).process
+    end
+
+    def db_freeze(name, storage)
+      OrientdbBinary::Protocols::DbFreeze.new(session: session, name: name, storage: storage).process(socket)
+    end
+
+    def db_release(name, storage)
+      OrientdbBinary::Protocols::DbRelease.new(session: session, name: name, storage: storage).process(socket)
     end
 
     def get_config(key)

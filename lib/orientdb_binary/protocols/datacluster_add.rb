@@ -13,7 +13,7 @@ module OrientdbBinary
       protocol_string :name
       protocol_string :location
       protocol_string :datasegment_name
-      int16 :cluster_id, value: -1
+      int16 :cluster_id, initial_value: -1
     end
 
     class DataclusterAddAnswer < BinData::Record

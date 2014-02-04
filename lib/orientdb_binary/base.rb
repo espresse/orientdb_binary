@@ -32,7 +32,7 @@ module OrientdbBinary
 
     private
 
-    def params (args)
+    def params (args={})
       args.merge(session: session)
     end
 

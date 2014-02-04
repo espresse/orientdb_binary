@@ -13,7 +13,7 @@ module OrientdbBinary
       protocol_string :driver_version, value: OrientdbBinary::VERSION
       int16 :protocol, value: OrientdbBinary::PROTOCOL_VERSION
       protocol_string :client_id
-      protocol_string :database_name
+      protocol_string :db
       protocol_string :storage
       protocol_string :user
       protocol_string :password

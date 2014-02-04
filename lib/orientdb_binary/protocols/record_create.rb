@@ -22,6 +22,14 @@ module OrientdbBinary
       int32 :session
       int64 :cluster_position
       int32 :record_version
+
+      def process(options)
+        return {
+          :@rid => "##{options[:cluster_id]}:#{cluster_position}",
+          :@version => record_version,
+          :@type => options[:record_type]
+        }
+      end
     end
   end
 end

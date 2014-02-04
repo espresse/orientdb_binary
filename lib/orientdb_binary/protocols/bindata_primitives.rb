@@ -28,5 +28,19 @@ module OrientdbBinary
         self.type = v.ord
       end
     end
+
+    class RecordObject < BinData::Primitive
+      endian :big
+
+      protocol_string :content
+
+      def get
+        self.content = OrientdbBinary::Parser::Deserializer.new.deserialize_document(self.content)
+      end
+
+      def set(v)
+        self.content = v
+      end
+    end
   end
 end
