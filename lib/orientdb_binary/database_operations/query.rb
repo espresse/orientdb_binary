@@ -16,7 +16,14 @@ module OrientdbBinary
       #   class_name = 'com.orientechnologies.orient.core.sql.OCommandSQL'
       # end
 
-      def command(text)
+      def command(text, params={})
+        class_name = 'com.orientechnologies.orient.core.sql.OCommandSQL'
+        fetch_plan = nil
+        serialized_params = OrientdbBinary::Parser::Serializer.new.serialize_document({params: params})
+        q = OrientdbBinary::Protocols::SqlCommandPayload.new text: text, serialized_params: serialized_params,
+                                                            fetch_plan: fetch_plan,
+                                                            class_name: class_name
+        _command(q.to_binary_s, class_name)
       end
 
       # def command(text)

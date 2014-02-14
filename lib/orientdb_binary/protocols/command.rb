@@ -50,8 +50,8 @@ module OrientdbBinary
       int32 :session
       int8 :synch_result_type
 
-      int32 :collection_size
-      array :collection, initial_length: :collection_size do
+      int32 :collection_size, onlyif: -> {synch_result_type == 108}
+      array :collection, initial_length: :collection_size, onlyif: -> {synch_result_type == 108} do
         int16 :marker
         int8 :record_type
         int16 :cluster_id
@@ -59,14 +59,22 @@ module OrientdbBinary
         int32 :version
         protocol_string :record_content
       end
+
+      int16 :marker, onlyif: -> {synch_result_type == 114}
+      int8 :record_type, onlyif: -> {synch_result_type == 114}
+      int16 :cluster_id, onlyif: -> {synch_result_type == 114}
+      int64 :position, onlyif: -> {synch_result_type == 114}
+      int32 :version, onlyif: -> {synch_result_type == 114}
+      protocol_string :record_content, onlyif: -> {synch_result_type == 114 or synch_result_type == 97}
+
       array :prefetched_records, read_until: -> {element.payload_status == 0} do
-        int8  :payload_status        
+        int8  :payload_status
         int16 :marker, onlyif: -> {payload_status > 0}
         int8 :record_type, onlyif: -> {payload_status > 0}
         int16 :cluster_id, onlyif: -> {payload_status > 0}
         int64 :position, onlyif: -> {payload_status > 0}
         int32 :version, onlyif: -> {payload_status > 0}
-        protocol_string :record_content, onlyif: -> {payload_status > 0}        
+        protocol_string :record_content, onlyif: -> {payload_status > 0}
       end
 
     end
@@ -95,7 +103,7 @@ module OrientdbBinary
 
     class Command < BinData::Record
       include OrientdbBinary::Protocols::Base
-      
+
       endian :big
 
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_COMMAND
