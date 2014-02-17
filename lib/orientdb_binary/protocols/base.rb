@@ -7,9 +7,12 @@ module OrientdbBinary
         write(socket)
 
         status = BinData::Int8.read(socket).to_i
-        process_errors(socket, status)
-
-        constantize("#{self.class.to_s}Answer").read(socket)
+        errors = process_errors(socket, status)
+        unless errors
+          constantize("#{self.class.to_s}Answer").read(socket)
+        else
+          return {exceptions: errors[:exceptions][0..-2]}
+        end
       end
 
       private
@@ -17,8 +20,9 @@ module OrientdbBinary
       def process_errors(socket, status)
         if status == 1
           errors = OrientdbBinary::Protocols::Errors.read(socket)
-          raise ProtocolError.new(self.session, *errors[:exceptions][0]) if errors[:exceptions].length > 0
+          return errors
         end
+        return nil
       end
 
       # this might go to String (as a refinment?)

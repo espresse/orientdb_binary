@@ -4,11 +4,14 @@ module OrientdbBinary
       endian :big
 
       int32 :session
-      array :exceptions, read_until: -> { element[:is_error] > 0 } do
+      array :exceptions, read_until: -> { element[:is_error] < 1 } do
         int8 :is_error
-        protocol_string :exception_class
-        protocol_string :exception_message
+        protocol_string :exception_class, onlyif: -> { is_error == 1 }
+        protocol_string :exception_message, onlyif: -> { is_error == 1 }
       end
+
+      int32 :len
+      skip length: :len
     end
   end
 
