@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ostrowski.michal@gmail.com"]
   spec.summary       = %q{OrientDB native client for Ruby 2}
   spec.description   = %q{Graph Database OrientDB native client for Ruby}
-  spec.homepage      = "http://orientdb-binary.espresse.net"
+  spec.homepage      = "http://github.com/espresse/orientdb_binary"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
