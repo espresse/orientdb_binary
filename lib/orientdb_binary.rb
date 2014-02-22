@@ -6,6 +6,7 @@ require 'date'
 
 require "orientdb_binary/config"
 
+require 'orientdb_binary/record_id'
 require 'orientdb_binary/parser/deserializer'
 require 'orientdb_binary/parser/serializer'
 

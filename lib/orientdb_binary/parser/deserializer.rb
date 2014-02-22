@@ -46,6 +46,7 @@ module OrientdbBinary
       end
 
       def deserialize_field_value(value)
+        return Orientdb::RecordId.new value if /^[#]?(?<cluster>-?\d+):(?<position>\d+)$/.match(value)
         return nil if value.empty?
 
         if ["true", "false"].include? value
