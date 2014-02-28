@@ -31,7 +31,7 @@ describe OrientdbBinary::Parser do
       end
 
       it "should parse rid in set" do
-        assert @result[:a_set].include? "#12:1"
+        assert_equal Orientdb::RecordId.new('#12:1'), @result[:a_set].to_a.last
       end
     end
 

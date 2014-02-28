@@ -1,0 +1,27 @@
+PATH
+  remote: .
+  specs:
+    orientdb-binary (0.7.0)
+      bindata (~> 1.8)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bindata (1.8.2)
+    docile (1.1.2)
+    multi_json (1.8.4)
+    rake (0.9.6)
+    simplecov (0.8.2)
+      docile (~> 1.1.0)
+      multi_json
+      simplecov-html (~> 0.8.0)
+    simplecov-html (0.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.5)
+  orientdb-binary!
+  rake (~> 0.9)
+  simplecov (~> 0.8)
