@@ -188,6 +188,62 @@ describe OrientdbBinary::Database do
            assert_equal 0, @db.load_record(cluster_id: 5, cluster_position: 0, fetch_plan: "*:-1", ignore_cache: 1, load_tombstones: 0)[:collection].length
         end
       end
+
+      describe "function" do
+        it "should be able to insert a function" do
+          record = @db.register_script(name: "test_script", code: "return 2;")
+          assert_equal "#7:0", record[:@rid]
+        end
+
+      end
+    end
+
+    describe "Queries" do
+
+      describe "Query" do
+        before do
+          @query = @db.query('SELECT FROM OUser where name = :name', {name: "admin"})
+        end
+
+        it "should find one data" do
+          assert_equal 1, @query[:collection].length
+        end
+
+        it "should be admin user" do
+          assert_equal 5, @query[:collection][0][:cluster_id]
+          assert_equal 0, @query[:collection][0][:position]
+        end
+      end
+
+      describe "Command" do
+        before do
+          @query = @db.command('INSERT INTO OUser (name, password, status) VALUES ("a", "secret", "ACTIVE"), ("b", "secret", "ACTIVE")', {})
+        end
+
+        it "should find one data" do
+          assert_equal 2, @query[:collection].length
+        end
+
+        it "should be user" do
+          user = OrientdbBinary::Parser::Deserializer.new.deserialize_document(@query[:collection][0][:record_content])
+          assert_equal "a", user[:name]
+        end
+      end
+
+      describe "Command returning one value" do
+        before do
+          @query = @db.command('INSERT INTO OUser (name, password, status) VALUES ("a", "secret", "ACTIVE")', {})
+        end
+
+        it "should find one data" do
+          assert_equal 1, @query[:collection].length
+        end
+
+        it "should be user" do
+          user = OrientdbBinary::Parser::Deserializer.new.deserialize_document(@query[:collection][0][:record_content])
+          assert_equal "a", user[:name]
+        end
+      end
     end
   end
 end

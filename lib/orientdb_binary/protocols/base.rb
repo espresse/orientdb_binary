@@ -5,7 +5,6 @@ module OrientdbBinary
 
       def process(socket)
         write(socket)
-
         status = BinData::Int8.read(socket).to_i
         errors = process_errors(socket, status)
         unless errors

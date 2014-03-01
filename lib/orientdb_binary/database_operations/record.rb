@@ -34,7 +34,9 @@ module OrientdbBinary
         }
         options = defaults.merge(args)
         answer = OrientdbBinary::Protocols::RecordLoad.new(params(options)).process(socket)
-        answer.process(options)
+        unless answer[:exceptions]
+          answer.process(options)
+        end
       end
 
       # Create record from object
@@ -100,6 +102,22 @@ module OrientdbBinary
       def count_records
         OrientdbBinary::Protocols::DbCountRecords.new(params).process(socket)
       end
+
+      def register_script(opts)
+        default = {
+          :@class => "OFunction",
+          :@cluster => "ofunction",
+          language: "javascript",
+          parameters: [],
+          idempotent: nil,
+          code: nil,
+          name: nil
+        }
+
+        record = default.merge(opts)
+        create_record_from_object(record)
+      end
+
     end
   end
 end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    orientdb-binary (0.7.0)
+    orientdb-binary (0.8.0)
       bindata (~> 1.8)
 
 GEM

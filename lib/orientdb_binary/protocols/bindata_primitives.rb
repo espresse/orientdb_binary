@@ -4,7 +4,7 @@ module OrientdbBinary
       endian :big
 
       int32 :len, value: -> { data.length }
-      string :data, read_length: :len
+      string :data, read_length: :len, onlyif: -> {len > -1}
 
       def get
         data
