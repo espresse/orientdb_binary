@@ -16,14 +16,18 @@ module Orientdb
     end
 
     def parse_rid(rid)
-      match = rid.match(/^[#]?(?<cluster>-?\d+):(?<position>\d+)$/)
+      match = rid.match(/^[#]?(?<cluster>-?\d+):(?<position>-?\d+)$/)
       @cluster = match[:cluster].to_i
       @position = match[:position].to_i
       self
     end
 
     def to_s
-      "##{cluster}:#{position}"
+      unless cluster && position
+        "nil"
+      else
+        "##{cluster}:#{position}"
+      end
     end
 
     def temporary?
