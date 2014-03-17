@@ -1,70 +1,56 @@
-require 'orientdb_binary/protocols/connect'
-require 'orientdb_binary/protocols/db_exist'
-require 'orientdb_binary/protocols/db_create'
-require 'orientdb_binary/protocols/db_drop'
-require 'orientdb_binary/protocols/db_freeze'
-require 'orientdb_binary/protocols/db_release'
-require 'orientdb_binary/protocols/shutdown'
-require 'orientdb_binary/protocols/config_list'
-require 'orientdb_binary/protocols/config_get'
-require 'orientdb_binary/protocols/config_set'
+require_relative 'server/database'
+require_relative 'server/config'
 
 module OrientdbBinary
-  class Server < OrientdbBinary::OrientdbBase
-    def self.connect(options)
-      Server.new(options)
+  class Server
+    attr_reader :connection, :session
+
+    # Initializes connection to server actions
+    #
+    # @example
+    #
+    #  connection = OrientdbBinary::Connection.new(host: host, port: port)
+    #  server = OrientdbBinary::Server.new(connection, user: user, password: password)
+    #
+    # @param [Hash] options
+    #
+    # @option [String] user OrientDb's root login
+    # @option [String] user OrientDb's root password
+    #
+    # @since 1.0
+    def initialize(connection_to_socket, args = {})
+      @connection = connection_to_socket
+      @user = args[:user]
+      @password = args[:password]
+
+      srv = connection.protocol::Connect.new(
+                                protocol: 19,
+                                user: args[:user],
+                                password: args[:password]
+                              ).process(connection)
+
+      @session = srv[:session] || OrientdbBinary::OperationTypes::NEW_SESSION
     end
 
-    def connect(args)
-      connection = OrientdbBinary::Protocols::Connect.new(
-                                                            protocol: protocol,
-                                                            user: args[:user],
-                                                            password: args[:password]
-                                                          ).process(socket)
-      @session = connection[:session] || OrientdbBinary::OperationTypes::NEW_SESSION
-      @connected = true if @session > OrientdbBinary::OperationTypes::NEW_SESSION
-      connection
+    # Shortcut for database operations
+    #
+    # @since 1.0
+    def database
+      Database.initialize_with(connection)
     end
 
-    def db_exists?(name)
-      answer = OrientdbBinary::Protocols::DbExist.new(session: session, database: name).process(socket)
-      answer[:exists] == 1
+    # Shortcut for config manipulations
+    #
+    # @since 1.0
+    def config
+      Config.new(connection)
     end
 
-    def db_create(name, type, storage)
-      OrientdbBinary::Protocols::DbCreate.new(session: session, name: name, type: type, storage: storage).process(socket)
-    end
-
-    def db_drop(name, storage)
-      OrientdbBinary::Protocols::DbDrop.new(session: session, name: name, storage: storage).process(socket)
-    end
-
-    def list
-      OrientdbBinary::Protocols::DbList.new(session: session).process(socket).process
-    end
-
-    def db_freeze(name, storage)
-      OrientdbBinary::Protocols::DbFreeze.new(session: session, name: name, storage: storage).process(socket)
-    end
-
-    def db_release(name, storage)
-      OrientdbBinary::Protocols::DbRelease.new(session: session, name: name, storage: storage).process(socket)
-    end
-
-    def get_config(key)
-      OrientdbBinary::Protocols::ConfigGet.new(session: session, option_key: key).process(socket)
-    end
-
-    def set_config(key, value)
-      OrientdbBinary::Protocols::ConfigSet.new(session: session, option_key: key.to_s, option_value: value.to_s).process(socket)
-    end
-
-    def config_list
-      OrientdbBinary::Protocols::ConfigList.new(session: session).process(socket)
-    end
-
-    def shutdown
-      OrientdbBinary::Protocols::Shutdown.new(session: session, user: @options[:user], password: @options[:password]).process(socket)
+    # Shutdowns server
+    #
+    # @since 1.0
+    def shutdown!
+        connection.protocol::Shutdown.new(session: session, user: @user, password: @password).process(connection)
     end
 
   end

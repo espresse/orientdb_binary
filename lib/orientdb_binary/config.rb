@@ -1,5 +1,5 @@
 module OrientdbBinary
-  VERSION = "0.8.0"
+  VERSION = "1.0.0"
   NAME = "OrientDB Binary Protocol Ruby Client"
-  PROTOCOL_VERSION = 20
+  CURRENT_PROTOCOL_VERSION = 20
 end
