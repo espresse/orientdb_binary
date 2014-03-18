@@ -8,8 +8,8 @@ module OrientdbBinary
       int8 :operation, value: OrientdbBinary::OperationTypes::REQUEST_DB_CLOSE
       int32 :session
 
-      def process(socket)
-        write(socket)
+      def process(connection)
+        write(connection.socket)
       end
     end
   end

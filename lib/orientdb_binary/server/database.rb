@@ -31,7 +31,6 @@ module OrientdbBinary
       #
       # @since 1.0
       def new(**args)
-        p args
         @name = args[:name]
         @storage = args[:storage] || :memory
         @type = args[:type] || :document

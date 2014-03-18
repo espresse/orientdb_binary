@@ -10,6 +10,21 @@ describe OrientdbBinary::Database do
     it "should be opened" do
       assert @database.opened?
     end
+
+    # it "should close database" do
+    #   @database.close
+    #   assert !@database.opened?
+    #   @database.open
+    #   assert @database.opened?
+    # end
+
+    it "should reload database" do
+      assert @database.reload.clusters.length > 0
+    end
+
+    it "should return database size" do
+      assert @database.size > 0
+    end
   end
 end
 

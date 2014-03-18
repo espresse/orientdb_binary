@@ -12,7 +12,8 @@ module OrientdbBinary
         unless errors
           constantize("#{self.class.to_s}Answer").read(socket)
         else
-          return {exceptions: errors[:exceptions][0..-2]}
+          # return {exceptions: errors[:exceptions][0..-2]}
+          raise StandardError, errors[:exceptions][0..-2]
         end
       end
 
@@ -20,7 +21,7 @@ module OrientdbBinary
 
       def process_errors(socket, status)
         if status == 1
-          errors = OrientdbBinary::Protocols::Errors.read(socket)
+          errors = OrientdbBinary::BaseProtocol::Errors.read(socket)
           return errors
         end
         return nil

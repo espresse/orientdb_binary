@@ -31,12 +31,12 @@ module TestHelper
     attr_reader :database, :connection
 
     def initialize
-      @connection = TestHelper::Server.instance.connection
+      @connection = OrientdbBinary::Connection.new(TestHelper::SERVER)
       create_database
     end
 
     def create_database
-      server = TestHelper::Server.instance.server
+      server = @connection.server(TestHelper::SERVER_USER)
       db = server.database.new(TestHelper::TEST_DB)
       db.drop! if db.exists?
       db.save!
