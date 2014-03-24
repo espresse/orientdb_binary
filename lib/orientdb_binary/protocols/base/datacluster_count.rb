@@ -20,7 +20,7 @@ module OrientdbBinary
       endian :big
 
       int32 :session
-      int64 :records_in_clusters
+      int64 :records_count
     end
   end
 end

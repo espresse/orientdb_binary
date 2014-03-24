@@ -12,7 +12,7 @@ module OrientdbBinary
       protocol_string :cluster_type
       protocol_string :name
       protocol_string :location
-      protocol_string :datasegment_name
+      protocol_string :segment_name
       int16 :cluster_id, initial_value: -1
     end
 

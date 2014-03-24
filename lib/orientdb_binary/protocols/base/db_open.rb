@@ -26,10 +26,10 @@ module OrientdbBinary
       int32 :session
       int16 :num_of_clusters
       array :clusters, initial_length: :num_of_clusters do
-        protocol_string :cluster_name
+        protocol_string :name
         int16 :cluster_id
         protocol_string :cluster_type
-        int16 :cluster_data_segment_id
+        int16 :segment_id
       end
       int32 :cluster_config_bytes
       skip length: :cluster_config_bytes, onlyif: :has_cluster_config?

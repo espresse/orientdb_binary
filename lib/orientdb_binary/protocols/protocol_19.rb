@@ -23,6 +23,13 @@ require_relative 'base/db_reload'
 require_relative 'base/db_size'
 require_relative 'base/db_list'
 
+require_relative 'base/datasegment_add'
+require_relative 'base/datasegment_drop'
+
+require_relative 'base/datacluster_add'
+require_relative 'base/datacluster_count'
+require_relative 'base/datacluster_datarange'
+require_relative 'base/datacluster_drop'
 
 module OrientdbBinary
   module Protocol

@@ -17,7 +17,7 @@ module OrientdbBinary
       endian :big
 
       int32 :session
-      bit4 :succeed
+      int8 :succeed
     end
   end
 end

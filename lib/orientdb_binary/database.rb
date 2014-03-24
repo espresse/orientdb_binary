@@ -1,6 +1,9 @@
+require_relative './database/segment'
+require_relative './database/cluster'
+
 module OrientdbBinary
   class Database
-    attr_reader :connection, :clusters, :session
+    attr_reader :connection, :clusters, :session, :storage, :name
 
     # Initializes connection to database
     #
@@ -61,7 +64,13 @@ module OrientdbBinary
       connection.protocol::DbSize.new(params).process(connection)[:db_size]
     end
 
+    # Shortcut for handling segments
+    #
+    # @return [Segment]
+    #
+    # @since 1.0
     def segment
+      Segment.initialize_with(self)
     end
 
     def cluster

@@ -25,6 +25,59 @@ describe OrientdbBinary::Database do
     it "should return database size" do
       assert @database.size > 0
     end
+
+    it "should initialize Segment" do
+      assert_equal OrientdbBinary::Database::Segment, @database.segment.class
+    end
+  end
+
+  describe "segment" do
+    before do
+      @segments = OrientdbBinary::Database::Segment.initialize_with(@database)
+    end
+
+    it "should initialize with database" do
+      assert @segments.database.opened?
+    end
+
+    it "should initialize a segment" do
+      assert_equal "__test", @segments.new(name: '__test').send(:params)[:name]
+      assert_equal "__test_segments", @segments.new(name: '__test').send(:params)[:location]
+    end
+
+    it "should create a segment" do
+      assert @segments.new(name: "__test").create! > 1
+    end
+
+    it "should drop a segment" do
+      segment = @segments.new(name: "__test_drop")
+      segment.create!
+      assert segment.drop!
+    end
+  end
+
+  describe "cluster" do
+    before do
+      @clusters = OrientdbBinary::Database::Cluster.initialize_with(@database)
+    end
+
+    it "should initialize with database" do
+      assert @clusters.database.opened?
+    end
+
+    describe "find by" do
+      it "should find by name" do
+        assert @clusters.find(name: 'default')
+      end
+
+      it "should find by cluster_id" do
+        assert @clusters.find(cluster_id: 3)
+      end
+
+      it "should count clusters" do
+        assert 6, @clusters.count(cluster_ids: [0,1,2])
+      end
+    end
   end
 end
 
@@ -51,9 +104,7 @@ end
 #   end
 
 #   describe 'database' do
-#     it "should be opened" do
-#       assert @db.connected?
-#     end
+
 
 #     it "should have info about build" do
 #       assert @open[:orientdb_release].length > 0
@@ -63,23 +114,6 @@ end
 #       assert @db.count_records[:count_records] == 12 #(6 OIdentity + 3 OUser + 3 ORole)
 #     end
 
-#     it "should reload database" do
-#       answer = @db.reload()
-#       assert_equal answer[:num_of_clusters], answer[:clusters].length
-#     end
-
-#     it "should add datasegment" do
-#       assert @db.add_datasegment(name: 'test_datasegment', location: 'test_location')[:segment_id] > 0
-#     end
-
-#     it "should add datasegment providing name only" do
-#       assert @db.add_datasegment(name: 'test_datasegment_1')[:segment_id] > 0
-#     end
-
-#     it "should drop datasegment" do
-#       @db.add_datasegment(name: 'test_datasegment', location: 'test_location')
-#       assert @db.drop_datasegment(name: 'test_datasegment')[:succeed]
-#     end
 
 #     describe 'datacluster' do
 #       before do
